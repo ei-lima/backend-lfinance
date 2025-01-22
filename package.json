@@ -1,0 +1,25 @@
+{
+  "dependencies": {
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "mysql2": "^3.12.0",
+    "sequelize": "^6.37.5",
+    "uuid": "^11.0.5"
+  },
+  "name": "lfinance",
+  "version": "1.0.0",
+  "description": "Project to manage personal finances",
+  "main": "public/index.js",
+  "scripts": {
+    "app": "nodemon public/index.js"
+  },
+  "keywords": [
+    "finance",
+    "money"
+  ],
+  "author": "Guilherme Lima",
+  "license": "ISC",
+  "devDependencies": {
+    "nodemon": "^3.1.9"
+  }
+}
