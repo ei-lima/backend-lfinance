@@ -12,6 +12,11 @@ const User = sequelize.define('User', {
         type: DataTypes.STRING,
         allowNull: false,
     },
+    cpf: {
+        type: DataTypes.STRING,
+        allowNull: true,
+        limit: 155
+    },
     email: {
         type: DataTypes.STRING,
         allowNull: false,
@@ -20,11 +25,14 @@ const User = sequelize.define('User', {
     password: {
         type: DataTypes.STRING,
         allowNull: false,
-    },
+    }
 }, {
     tableName: 'users',
     timestamps: true,
-    paranoid: true
+    paranoid: true,
+    createdAt: 'created_at',
+    updatedAt: 'updated_at',
+    deletedAt: 'deleted_at'
 });
 
 module.exports = User;
