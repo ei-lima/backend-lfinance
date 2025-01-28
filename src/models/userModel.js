@@ -19,8 +19,7 @@ const User = sequelize.define('User', {
     },
     email: {
         type: DataTypes.STRING,
-        allowNull: false,
-        unique: true,
+        allowNull: false
     },
     password: {
         type: DataTypes.STRING,
@@ -34,5 +33,6 @@ const User = sequelize.define('User', {
     updatedAt: 'updated_at',
     deletedAt: 'deleted_at'
 });
+
 
 module.exports = User;

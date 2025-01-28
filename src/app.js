@@ -3,8 +3,16 @@ const sequelize         = require('./config/db');
 const userRoutes        = require('./routes/userRoutes.js');
 const app               = express();
 const bodyParser        = require('body-parser');
+const moment            = require('moment');
+const helmet            = require('helmet');
+const compression       = require('compression')
+moment.locale('pt-br');
 
 app.use(bodyParser.json());
+app.use(helmet());
+app.use(compression());
+
+app.disable('x-powered-by');
 
 (async () => {
     try {
@@ -16,6 +24,7 @@ app.use(bodyParser.json());
 
 // Rotas
 app.use('/users', userRoutes);
+
 
 app.use((req, res, next) => {
     // Retorna uma página HTML
