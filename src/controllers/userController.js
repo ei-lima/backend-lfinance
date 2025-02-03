@@ -1,8 +1,9 @@
 const jwt = require('jsonwebtoken');
-const { secretKey, timeToTokenExpiresInHours } = require('../utils/configs');
+const { secretKey, timeToTokenExpiresInHours, defaultReturnUsers } = require('../utils/configs');
 const User = require('../models/userModel');
-const UserRequest = require('../models/userModel');
 const moment = require('moment');
+const { generateHash } = require('../utils/helpers');
+const { UserRequest } = require('../models/userRequest');
 
 exports.authUser = async (req, res) => {
     try {
@@ -14,7 +15,7 @@ exports.authUser = async (req, res) => {
             return res.status(401).json({ error: 'Usuário não encontrado.' });
         }
 
-        if (email !== userFounded.email && password !== userFounded.password) {
+        if (email !== userFounded.email && await generateHash(password) !== userFounded.password) {
             return res.status(401).json({ error: 'Credenciais inválidas' });
         }
 
@@ -38,11 +39,13 @@ exports.authUser = async (req, res) => {
 
 exports.createUser = async (req, res) => {
     try {
-        const { cpf, email } = req.body;
+        const { password } = req.body;
 
-        console.log(UserRequest(req.body))
+        req.body.password = await generateHash(password);
 
-        const userFounded = await User.findOne({ where: { email, cpf } });
+        const request = new UserRequest(req.body);
+
+        const userFounded = await User.findOne({ where: { email: request.email, cpf: request.cpf } });
 
         if (userFounded) {
             return res.status(400).json({ error: 'Usuário ja existente.' });
@@ -56,7 +59,7 @@ exports.createUser = async (req, res) => {
 
         return res.status(201).json(userCreated);
     } catch (error) {
-        return res.status(500).json({ error: error.errors?.[0]?.message ?? error });
+        return res.status(500).json({ error: error.errors?.[0]?.message || error });
     }
 }
 
@@ -97,7 +100,7 @@ exports.getUser = async (req, res) => {
             return res.status(400).json({ error: 'Identificador do usuário não informado.' });
         }
 
-        const userFounded = (await User.findByPk(id))?.toJSON();
+        const userFounded = (await User.findByPk(id, defaultReturnUsers))?.toJSON();
 
         return res.status(200).json(userFounded);
     } catch (error) {
@@ -107,7 +110,7 @@ exports.getUser = async (req, res) => {
 
 exports.getUsers = async (req, res) => {
     try {
-        const userFounded = await User.findAll();
+        const userFounded = await User.findAll(defaultReturnUsers);
 
         return res.status(200).json(userFounded);
     } catch (error) {
