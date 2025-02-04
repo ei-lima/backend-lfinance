@@ -1,11 +1,13 @@
 const express           = require('express');
-const sequelize         = require('./config/db');
 const userRoutes        = require('./routes/userRoutes.js');
+const authRoutes        = require('./routes/authRoutes.js');
 const app               = express();
 const bodyParser        = require('body-parser');
 const moment            = require('moment');
 const helmet            = require('helmet');
-const compression       = require('compression')
+const compression       = require('compression');
+const logMiddleware     = require('./middlewares/logMiddleware.js');
+const authenticateToken = require('./middlewares/jwt.js');
 moment.locale('pt-br');
 
 app.use(bodyParser.json());
@@ -15,6 +17,11 @@ app.use(compression());
 app.disable('x-powered-by');
 
 // Rotas
+app.use('/auth', authRoutes);
+
+app.use(authenticateToken);
+app.use(logMiddleware);
+
 app.use('/users', userRoutes);
 
 
