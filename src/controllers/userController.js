@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken');
 const { secretKey, timeToTokenExpiresInHours, defaultReturnUsers } = require('../utils/configs');
 const User = require('../models/userModel');
 const moment = require('moment');
-const { generateHash } = require('../utils/helpers');
+const { generateHash, compareHash } = require('../utils/helpers');
 const { UserRequest } = require('../models/userRequest');
 
 // Auth
@@ -13,11 +13,11 @@ exports.authUser = async (req, res) => {
         const userFounded = (await User.findOne({ where: { email }}))?.toJSON();
 
         if (!userFounded) {
-            return res.status(401).json({ error: 'Usuário não encontrado.' });
+            return res.status(401).json({ error: 'E-mail inválido' });
         }
 
-        if (email !== userFounded.email && await generateHash(password) !== userFounded.password) {
-            return res.status(401).json({ error: 'Credenciais inválidas' });
+        if (!(await compareHash(password, userFounded.password))) {
+            return res.status(401).json({ error: 'Senha inválida' });
         }
 
         const user_email = userFounded.email;
@@ -42,6 +42,7 @@ exports.authUser = async (req, res) => {
 
         res.status(200).json({ expires_at_timestamp, user_email, expires_at, token });
     } catch (error) {
+        console.error(error)
         return res.status(500).json({ error: error.errors?.[0]?.message ?? error });
     }
 };
