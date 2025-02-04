@@ -71,7 +71,6 @@ exports.updateUser = async (req, res) => {
             return res.status(400).json({ error: 'Identificador do usuário não informado.' });
         }
 
-
         const userFounded = await User.findOne({ where: { id } });
 
         if (!userFounded) {
@@ -114,6 +113,7 @@ exports.getUsers = async (req, res) => {
 
         return res.status(200).json(userFounded);
     } catch (error) {
+        console.log(error)
         return res.status(500).json({ error: error.errors?.[0]?.message ?? error });
     }
 }

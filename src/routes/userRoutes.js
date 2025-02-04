@@ -10,9 +10,9 @@ router.post('/login', userController.authUser);
 // auth
 router.use(authenticateToken);
 
-router.post('/create', fieldValidator(['name', 'cpf', 'email', 'password']), userController.createUser);
+router.post('/create', fieldValidator(['name', 'cpf', 'email', 'password', 'role_id']), userController.createUser);
 
-router.put('/update', fieldValidator(['id', 'name', 'cpf', 'email']), userController.updateUser);
+router.put('/update', fieldValidator(['id', 'name', 'cpf', 'email', 'role_id']), userController.updateUser);
 
 router.get('/profile/:id', fieldValidator(['id']), userController.getUser);
 

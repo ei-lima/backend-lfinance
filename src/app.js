@@ -14,14 +14,6 @@ app.use(compression());
 
 app.disable('x-powered-by');
 
-(async () => {
-    try {
-        await sequelize.sync({ force: false }); // ao deixar como true, sempre ira forcar o banco se atualizar com a model
-    } catch (error) {
-        console.error('Erro ao sincronizar o banco de dados:', error.message);
-    }
-})();
-
 // Rotas
 app.use('/users', userRoutes);
 
