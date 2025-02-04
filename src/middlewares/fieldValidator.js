@@ -2,7 +2,11 @@ const fieldValidator = (requiredFields) => {
     return (req, res, next) => {
         const errors = [];
 
-        const payload = req.params || req.body;
+        let payload = req.params;
+
+        if (!Object.keys(payload).length) {
+            payload = req.body;
+        }
 
         requiredFields.forEach((field) => {
             if (!payload[field]) {

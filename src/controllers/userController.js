@@ -5,6 +5,7 @@ const moment = require('moment');
 const { generateHash } = require('../utils/helpers');
 const { UserRequest } = require('../models/userRequest');
 
+// Auth
 exports.authUser = async (req, res) => {
     try {
         const { email, password } = req.body;
@@ -21,9 +22,17 @@ exports.authUser = async (req, res) => {
 
         const user_email = userFounded.email;
 
-        const token = jwt.sign({ id: userFounded.id, username: userFounded.username }, secretKey, {
-            expiresIn: timeToTokenExpiresInHours + 'h',
-        });
+        const token = jwt.sign(
+            {
+                id: userFounded.id,
+                username: userFounded.username,
+                role: userFounded.roleId
+            },
+            secretKey,
+            {
+                expiresIn: timeToTokenExpiresInHours + 'h',
+            }
+        );
 
         const time_plus_tree_ours = moment().add(timeToTokenExpiresInHours, 'hours');
 
@@ -37,6 +46,7 @@ exports.authUser = async (req, res) => {
     }
 };
 
+// Create
 exports.createUser = async (req, res) => {
     try {
         const { password } = req.body;
@@ -51,7 +61,7 @@ exports.createUser = async (req, res) => {
             return res.status(400).json({ error: 'Usuário ja existente.' });
         }
 
-        const userCreated = (await User.create(req.body))?.toJSON();
+        const userCreated = (await User.create(req.body, defaultReturnUsers))?.toJSON();
 
         if (!userCreated) {
             return res.status(500).json({ error: 'Falha ao criar usuário' });
@@ -63,6 +73,7 @@ exports.createUser = async (req, res) => {
     }
 }
 
+// Update
 exports.updateUser = async (req, res) => {
     try {
         const { id } = req.body;
@@ -91,6 +102,7 @@ exports.updateUser = async (req, res) => {
     }
 }
 
+// Get
 exports.getUser = async (req, res) => {
     try {
         const { id } = req.params;
@@ -107,6 +119,7 @@ exports.getUser = async (req, res) => {
     }
 }
 
+// Get all
 exports.getUsers = async (req, res) => {
     try {
         const userFounded = await User.findAll(defaultReturnUsers);
@@ -118,6 +131,7 @@ exports.getUsers = async (req, res) => {
     }
 }
 
+// Delete
 exports.deleteUser = async (req, res) => {
     try {
         const { id } = req.params;

@@ -8,7 +8,7 @@ const sequelize = require('../src/config/db');
         await sequelize.authenticate();
         console.log('✅ Conexão bem-sucedida.');
 
-        await sequelize.sync({ alter: true }); // Recria as tabelas
+        await sequelize.sync({ alter: false }); // Recria as tabelas
     } catch (error) {
         console.error('❌ Erro ao sincronizar banco:', error.message);
     }

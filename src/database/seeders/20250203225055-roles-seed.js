@@ -10,11 +10,11 @@ module.exports = {
     const existingRoleNames = existingRoles.map(role => role.name);
 
     const rolesToInsert = [
-      { name: 'admin' },
-      { name: 'viewer' },
-      { name: 'limited' },
-      { name: 'operator' }
-    ].filter(role => !existingRoleNames.includes(role.name)); // Filtra roles já existentes
+      { id: 1, name: 'admin' },
+      { id: 2, name: 'viewer' },
+      { id: 3, name: 'limited' },
+      { id: 4, name: 'operator' }
+    ].filter(role => !existingRoleNames.includes(role.name));
 
     if (rolesToInsert.length > 0) {
       return queryInterface.bulkInsert('roles', rolesToInsert);
