@@ -10,6 +10,14 @@ exports.authUser = async (req, res) => {
     try {
         const { email, password } = req.body;
 
+        if (!email) {
+            return res.status(401).json({ error: 'Email not informed' });
+        }
+
+        if (!password) {
+            return res.status(401).json({ error: 'password not informed' });
+        }
+
         const userFounded = (await User.findOne({ where: { email }}))?.toJSON();
 
         if (!userFounded) {
@@ -40,7 +48,9 @@ exports.authUser = async (req, res) => {
 
         const expires_at_timestamp = time_plus_tree_ours.toDate().getTime();
 
-        res.status(200).json({ expires_at_timestamp, user_email, expires_at, token });
+        const userRole = userFounded.role;
+
+        res.status(200).json({ expires_at_timestamp, user_email, expires_at, token, userRole });
     } catch (error) {
         console.error(error)
         return res.status(500).json({ error: error.errors?.[0]?.message ?? error });

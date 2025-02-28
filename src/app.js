@@ -8,8 +8,10 @@ const helmet            = require('helmet');
 const compression       = require('compression');
 const logMiddleware     = require('./middlewares/logMiddleware.js');
 const authenticateToken = require('./middlewares/jwt.js');
+const cors              = require('cors');
 moment.locale('pt-br');
 
+app.use(cors());
 app.use(bodyParser.json());
 app.use(helmet());
 app.use(compression());
